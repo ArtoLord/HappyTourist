@@ -17,6 +17,9 @@ class Ingestion(models.Model):
     proteins = models.IntegerField()
     carbohydrates = models.IntegerField()
 
+class Dish(models.Model):
+    name = models.CharField(max_length=100)
+    recipe = models.TextField()
 
 class Product(models.Model):
     name = models.CharField(max_length=100)
@@ -29,12 +32,14 @@ class Product(models.Model):
 class ListOfProducts(models.Model):
     list_of_products = SortedManyToManyField(Product)
 
+class DetailedIngestion(Ingestion):
+    dish = models.ForeignKey(Dish, on_delete = models.CASCADE)
+
 class ParamsOfHike(models.Model):
     products = models.ForeignKey(ListOfProducts, on_delete=models.CASCADE)
     ingestions = models.ManyToManyField(Ingestion)
     days = models.IntegerField()
     people = models.IntegerField()
 
-class Dish(models.Model):
-    name = models.CharField(max_length=100)
-    recipe = models.TextField()
+class Distribution(models.Model):
+    pass
