@@ -8,6 +8,10 @@ class IngestionType(Enum):
     DINNER = "DINNER"
     SNACK ="SNACK"
 
+class Dish(models.Model):
+    name = models.CharField(max_length=100)
+    recipe = models.TextField()
+
 class Ingestion(models.Model):
     name = models.CharField(max_length=512)
     created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
@@ -16,10 +20,8 @@ class Ingestion(models.Model):
     fats = models.IntegerField()
     proteins = models.IntegerField()
     carbohydrates = models.IntegerField()
-
-class Dish(models.Model):
-    name = models.CharField(max_length=100)
-    recipe = models.TextField()
+    dish_name = models.CharField(max_length=100)
+    dish_recipe = models.TextField()
 
 class Product(models.Model):
     name = models.CharField(max_length=100)
@@ -30,15 +32,12 @@ class Product(models.Model):
     carbohydrates_per_100g = models.IntegerField()
 
 class ListOfProducts(models.Model):
-    list_of_products = SortedManyToManyField(Product)
-
-class DetailedIngestion(Ingestion):
-    dish = models.ForeignKey(Dish, on_delete = models.CASCADE)
+    list_of_products = models.ManyToManyField(Product)
 
 class ParamsOfHike(models.Model):
     products = models.ForeignKey(ListOfProducts, on_delete=models.CASCADE)
-    ingestions = models.ManyToManyField(Ingestion)
-    days = models.IntegerField()
+    ingestions = SortedManyToManyField(Ingestion)
+    days = models.IntegerField()    
     people = models.IntegerField()
 
 class Distribution(models.Model):
